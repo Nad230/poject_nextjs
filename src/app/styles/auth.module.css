@@ -1,0 +1,226 @@
+/* Container */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #eeeeef;  /* Couleur de fond douce et moderne */
+}
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 35px;
+  width: 400px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Effet de survol */
+}
+
+/* Title */
+.title {
+  font-size: 26px;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif; /* Une police plus moderne */
+  font-weight: 600;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 25px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Input Group */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Input Wrapper */
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  position: relative; /* Ajoutez cette ligne pour positionner l'icône correctement */
+  border-radius: 20px;
+  background-color: #f7f7f7;
+  padding: 2px;
+  border: 1px solid #ddd;
+}
+
+.inputWrapper:focus-within {
+  border-color: #5b9bd5; /* Changement de couleur lors de la mise au point */
+  box-shadow: 0 0 8px rgba(91, 155, 213, 0.5); /* Ombre douce au focus */
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: transparent;
+  color: #333;
+  font-size: 15px;
+  outline: none;
+  border-radius: 30px;
+}
+
+/* Icone dans les Inputs */
+.icon {
+  color: #5b9bd5;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+/* Eye Icon pour afficher/masquer le mot de passe */
+.eyeIcon {
+  color: #333;
+  font-size: 18px;
+  position: absolute;
+  right: 10px; /* Pour positionner l'icône à droite */
+  top: 50%;
+  transform: translateY(-50%); /* Centrer l'icône verticalement */
+  cursor: pointer;
+}
+
+
+/* Boutons */
+.buttonGroup {
+  margin-top: 25px;
+}
+
+.button {
+  width: 50%;
+  padding: 11px;
+  background-color: #2167a8eb;
+  color: white;
+  border-radius: 30px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #296ec3ce; /* Couleur plus sombre lors du survol */
+}
+
+/* Switch entre Sign Up et Sign In */
+.switch {
+  color: #333;
+  margin-top: 7px;
+  font-size: 14px;
+}
+.social-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;  /* made smaller */
+  height: 40px; /* made smaller */
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.googleImage {
+  margin-top: 10px;
+  margin-left: 50px;
+  width: 50px;  /* Adjust width as needed */
+  height: 50px; /* Adjust height as needed */
+}
+
+.facebookImage {
+  width: 40px;  /* Adjust width as needed */
+  height: 40px;
+  /* Adjust height as needed */
+}
+
+.githubImage {
+  width: 40px;  /* Adjust width as needed */
+  height: 40px;
+   /* Adjust height as needed */
+}
+
+
+
+.errorMessage {
+  position: fixed; /* Fixed position at the bottom-left */
+  bottom: 20px; /* 20px from the bottom of the screen */
+  left: 20px; /* 20px from the left of the screen */
+  background-color: white; /* White background for the alert */
+  padding: 10px 20px; /* Some padding for the alert content */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow around the box */
+  display: flex;
+  align-items: center; /* Center content vertically */
+  gap: 10px; /* Space between the icon and text */
+  z-index: 9999; /* Ensure the alert is above other content */
+}
+
+.icon {
+  font-size: 20px; /* Icon size */
+  color: red; /* Red color for the error icon */
+}
+
+.errorMessage p {
+  margin: 0;
+  font-size: 14px; /* Font size for the error text */
+  color: black; /* Text color */
+}
+
+
+.successMessage {
+  position: fixed; /* Fixed position at the bottom-left */
+  bottom: 20px; /* 20px from the bottom of the screen */
+  left: 20px; /* 20px from the left of the screen */
+  background-color: white; /* White background for the alert */
+  padding: 10px 20px; /* Some padding for the alert content */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow around the box */
+  display: flex;
+  align-items: center; /* Center content vertically */
+  gap: 10px; /* Space between the icon and text */
+  z-index: 9999; /* Ensure the alert is above other content */
+}
+
+.successMessage .icon {
+  font-size: 20px; /* Icon size */
+  color: green; /* Green color for the success icon */
+}
+
+.successMessage p {
+  margin: 0;
+  font-size: 14px; /* Font size for the success text */
+  color: black; /* Text color */
+}
+
+
+.icon {
+  font-size: 20px;
+}
+
+.link {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+.top {
+ 
+  margin-top: 23px;
+ 
+
+}
