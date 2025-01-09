@@ -34,10 +34,10 @@ export default function LoginPage() {
     }
   };
 
-  const handleOAuthLogin = async () => {
+  const handleOAuthLogin = async (provider) => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider: provider, // dynamically use the provider passed
         options: {
           redirectTo: `${window.location.origin}/auth/callback`, // Redirect to the OAuth callback page
         },
@@ -122,15 +122,36 @@ export default function LoginPage() {
         </p>
         <p className={styles.switch}>Or</p>
 
-        <div className={styles.socialButtons}>
-          <div className={styles.socialButton} onClick={handleOAuthLogin}>
-            <img
-              className={styles.googleImage}
-              src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-              alt="Google Login"
-            />
-          </div>
+          <div className={styles.socialButtons}>
+          {/* Google Login Button */}
+            <div className={styles.socialButton} onClick={() => handleOAuthLogin("google")}>
+              <img
+                className={styles.googleImage}
+                src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+                alt="Google Login"
+              />
+            </div>
+
+            {/* Facebook Login Button */}
+            <div className={styles.socialButton} onClick={() => handleOAuthLogin("facebook")}>
+              <img
+                className={styles.facebookImage}
+                src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                alt="Facebook Login"
+              />
+            </div>
+
+            {/* GitHub Login Button */}
+            <div className={styles.socialButton} onClick={() => handleOAuthLogin("github")}>
+              <img
+                className={styles.githubImage}
+                src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+                alt="GitHub Login"
+              />
+            </div>
         </div>
+
+
       </div>
 
       {success && (

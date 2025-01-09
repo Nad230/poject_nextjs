@@ -120,36 +120,39 @@
   margin-top: 7px;
   font-size: 14px;
 }
-.social-button {
+.socialButtons {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;  /* made smaller */
-  height: 40px; /* made smaller */
-  border-radius: 50%;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  gap: 10px; /* Space between each button */
+  justify-content: center; /* Center the buttons */
+  margin-top: 20px; /* Optional: Adjust top margin for spacing */
+}
+
+.socialButton {
   cursor: pointer;
-  transition: transform 0.2s;
 }
 
-.googleImage {
-  margin-top: 10px;
-  margin-left: 50px;
-  width: 50px;  /* Adjust width as needed */
-  height: 50px; /* Adjust height as needed */
-}
+.googleImage{
+  margin-top: -8px;
+  width: 60px; /* Adjust the width of the images */
+  height: 60px; /* Adjust the height of the images */
+  object-fit: cover; /* Ensure the images don't get distorted */
+  border-radius: 5px; /* Optional: To make the images rounded */
 
-.facebookImage {
-  width: 40px;  /* Adjust width as needed */
-  height: 40px;
-  /* Adjust height as needed */
 }
+.facebookImage{
+  width: 40px; /* Adjust the width of the images */
+  height: 40px; /* Adjust the height of the images */
+  object-fit: cover; /* Ensure the images don't get distorted */
+  border-radius: 15px; /* Optional: To make the images rounded */
 
+}
 .githubImage {
-  width: 40px;  /* Adjust width as needed */
-  height: 40px;
-   /* Adjust height as needed */
+  width: 40px; /* Adjust the width of the images */
+  height: 40px; /* Adjust the height of the images */
+  object-fit: cover; /* Ensure the images don't get distorted */
+  border-radius: 5px; /* Optional: To make the images rounded */
+  margin-left: 5px;
+
 }
 
 

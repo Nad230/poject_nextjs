@@ -1,35 +1,146 @@
-import Link from 'next/link';
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { AppBar, Toolbar, IconButton, Box, Drawer, List, ListItem, ListItemText, Typography, Menu, MenuItem } from "@mui/material";
+import { Notifications, AccountCircle, Brightness4, Menu as MenuIcon } from "@mui/icons-material";
+import Link from "next/link"; // Use Next.js Link instead of react-router-dom Link
+import { useUser } from './context/UserContext'; // Import useUser
+
+const Header = () => {
+  const { user } = useUser(); // Get user data from context
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Default profile image (if user doesn't have one)
+  const profileImage = user?.avatar_url || "https://example.com/default-profile.jpg"; // Replace with the actual user profile field if available
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <main
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontFamily: 'Arial, sans-serif',
-      }}
-    >
-      <h1>Welcome to Next.js!</h1>
-      <p>Get started by editing <code>src/app/page.js</code></p>
-      <Link
-        href="/logout"
-        style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          fontSize: '16px',
-          cursor: 'pointer',
-          backgroundColor: '#0070f3',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          textDecoration: 'none',
+    <>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "#1e293b",
+          boxShadow: "none",
+          borderBottom: "2px solid #334155",
         }}
       >
-        Logout
+        <Toolbar>
+          <IconButton color="inherit" onClick={toggleSidebar} sx={{ marginRight: 2 }}>
+            <MenuIcon />
+          </IconButton>
+
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: "#ffffff" }}>
+            MyProject
+          </Typography>
+
+          <Box sx={{ display: "flex", gap: 2 }}>
+            {["profile", "Test2"].map((label, index) => (
+              <Link
+                key={index}
+                href={`/${label.toLowerCase().replace(" ", "-")}`}
+                style={{
+                  textDecoration: "none",
+                  color: "#ffffff",
+                  transition: "color 0.3s ease, transform 0.3s ease",
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+          </Box>
+
+          <Box sx={{ height: "40px", width: "2px", backgroundColor: "#6b7280", marginX: 2 }} />
+
+          <IconButton color="inherit">
+            <Notifications />
+          </IconButton>
+          <IconButton color="inherit">
+            <Brightness4 />
+          </IconButton>
+
+          <IconButton color="inherit" onClick={handleMenuClick}>
+            
+              <AccountCircle />
+            
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <Link
+              href="/logout"
+              style={{
+                display: "block",
+                padding: "10px 20px",
+                fontSize: "16px",
+                cursor: "pointer",
+                backgroundColor: "#ffffff",
+                color: "#1e293b",
+                border: "none",
+                borderRadius: "5px",
+                textDecoration: "none",
+                transition: "background-color 0.3s",
+              }}
+              onClick={handleMenuClose}
+            >
+              Logout
+            </Link>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer
+        anchor="left"
+        open={isSidebarOpen}
+        onClose={toggleSidebar}
+        PaperProps={{
+          sx: {
+            marginTop: "64px",
+            height: "calc(100% - 64px)",
+            backgroundColor: "#1e293b",
+          },
+        }}
+      >
+        <Box sx={{ width: 250, backgroundColor: "#1e293b", height: "100%", color: "#ffffff" }}>
+          <Box sx={{ height: 150, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#334155" }} />
+       
+            
+          <List>
+  {["Test1", "Test2", "Test3"].map((label, index) => (
+    <ListItem button key={index}> {/* Correct usage: button is a boolean */}
+      <Link
+        href={`/${label.toLowerCase().replace(" ", "-")}`}
+        style={{
+          textDecoration: "none",
+          color: "#ffffff",
+          transition: "color 0.3s ease, transform 0.3s ease",
+        }}
+        onClick={toggleSidebar}
+      >
+        <ListItemText primary={label} />
       </Link>
-    </main>
+    </ListItem>
+  ))}
+</List>
+
+        </Box>
+      </Drawer>
+    </>
   );
-}
+};
+
+export default Header;

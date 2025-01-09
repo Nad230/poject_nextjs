@@ -14,14 +14,14 @@ const AuthCallbackPage = () => {
   const router = useRouter();
   const [error, setError] = useState('');
   const [isProcessing, setIsProcessing] = useState(true);
+  const [user, setUser] = useState(null);  // Add state to store the user details
 
   useEffect(() => {
     const processCallback = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-
-        console.log("Session Data:", session); // Debug log
-        console.log("Session Error:", error);  // Debug log
+        console.log("Session Data:", session);
+        console.log("Session Error:", error);
 
         if (error || !session) {
           setError("Failed to retrieve session or tokens.");
@@ -32,14 +32,24 @@ const AuthCallbackPage = () => {
         const { access_token, refresh_token } = session;
 
         if (access_token && refresh_token) {
-          // Set cookies for both tokens
           setCookie("access_token", access_token, { maxAge: 3600, path: '/' });
           setCookie("refresh_token", refresh_token, { maxAge: 3600, path: '/' });
 
-          console.log("Tokens successfully set.");
+          // Fetch the user's profile info
+          const userResponse = await supabase.auth.getUser();
+          if (userResponse.error) {
+            setError("Failed to fetch user details.");
+            setIsProcessing(false);
+            return;
+          }
+
+          setUser(userResponse.data.user);  // Store the user details in the state
+
+          console.log("User Data:", userResponse.data.user); // Debug log for user info
+
           setError('');
           setIsProcessing(false);
-          router.push('/'); // Redirect to the home page
+          router.push('/');  // Redirect to the home page after login
         } else {
           setError("Failed to extract tokens.");
           setIsProcessing(false);
@@ -64,7 +74,7 @@ const AuthCallbackPage = () => {
       ) : (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
           <h1>Login Successful!</h1>
-          <p>Welcome back!</p>
+        
         </div>
       )}
     </div>
