@@ -39,21 +39,21 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback`, // Redirect to the OAuth callback page
         },
       });
-
+  
       if (error) {
         setError(`Error: ${error.message}`);
         return;
       }
-
-      // No need to manually set session here, because the session will be automatically set by Supabase
-      // after the callback URL
+  
+      // OAuth login is initiated, wait for the callback to handle the session
     } catch (error) {
       setError(`Error: ${error.message}`);
     }
   };
+  
 
   useEffect(() => {
     const hash = window.location.hash;
