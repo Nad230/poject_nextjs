@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signup } from "../action/actions";
-import { AiOutlineMail, AiOutlineUser, AiOutlineLock, AiOutlineEye } from 'react-icons/ai'; // Importation des icônes
+import { AiOutlineMail, AiOutlineUser, AiOutlineLock, AiOutlineEye, AiOutlinePhone } from 'react-icons/ai'; // Importation des icônes
 import styles from "../styles/auth.module.css";
 
 export default function SignupPage() {
@@ -14,13 +14,31 @@ export default function SignupPage() {
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    setError(""); // Clear previous error message
+  
     const formData = new FormData(e.target);
-    await signup(formData, setError);
-
-    setLoading(false);
+  
+    try {
+      const response = await signup(formData);
+      
+      // Log the full response for debugging
+      console.log("Signup response:", response);
+  
+      if (response.success) {
+        window.location.href = '/login'; // Redirect to login page
+      } else {
+        setError(response.error || "Something went wrong!");
+      }
+    } catch (err) {
+      console.error("Error during signup process:", err); // Log any errors
+      setError("An error occurred during signup.");
+    } finally {
+      setLoading(false); // Stop loading animation
+    }
   };
-
+  
+  
+  
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -32,7 +50,7 @@ export default function SignupPage() {
               <AiOutlineUser className={styles.icon} />
               <input
                 type="text"
-                name="name"
+                name="fullname"
                 placeholder="Full Name..."
                 required
                 className={styles.input}
@@ -49,6 +67,16 @@ export default function SignupPage() {
               />
             </div>
             <div className={styles.inputWrapper}>
+              <AiOutlinePhone className={styles.icon} />
+              <input
+                type="text"
+                name="phone"
+                placeholder="Phone..."
+                required
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.inputWrapper}>
               <AiOutlineLock className={styles.icon} />
               <input
                 type={isObscure ? "password" : "text"}
@@ -59,25 +87,10 @@ export default function SignupPage() {
               />
               <AiOutlineEye
                 className={styles.eyeIcon}
-                onClick={() => setIsObscure(!isObscure)} // Changer l'état de l'affichage
+                onClick={() => setIsObscure(!isObscure)} // Toggle password visibility
               />
             </div>
-            <div className={styles.inputWrapper}>
-              <AiOutlineLock className={styles.icon} />
-              <input
-                type={isObscure ? "password" : "text"}
-                name="confirmPassword"
-                placeholder="Confirm Password..."
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className={styles.input}
-              />
-              <AiOutlineEye
-                className={styles.eyeIcon}
-                onClick={() => setIsObscure(!isObscure)} // Changer l'état de l'affichage
-              />
-            </div>
+            
           </div>
           <div className={styles.buttonGroup}>
             <button type="submit" className={styles.button} disabled={loading}>

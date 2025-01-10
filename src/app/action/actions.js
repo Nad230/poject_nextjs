@@ -21,51 +21,54 @@ export async function login(formData) {
   revalidatePath('/', 'layout');
   redirect('/');
 }
-
-  
 export async function signup(formData) {
   const supabase = await createClient();
 
-  // Récupération des champs du formulaire
-  const data = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    password: formData.get('password'),
-    confirmPassword: formData.get('confirmPassword'),
-    address: formData.get('address'),
-  };
+  // Step 1: Extract form data
+  const email = formData.get('email');
+  const password = formData.get('password');
+  const fullname = formData.get('fullname');
+  const phone = formData.get('phone');
+  const role = formData.get('role') || 'user'; // Default role is 'user'
 
-  // Validation des données
-  if (data.password !== data.confirmPassword) {
-    console.error("Password mismatch");
-    return "Passwords do not match!";
+  console.log("Signup Process Started:", { email, password, fullname, phone, role });
+
+  // Step 2: Create user in Supabase Authentication
+  const { data: signUpData, error: authError } = await supabase.auth.signUp({ email, password });
+
+  console.log("Supabase Auth Response:", { signUpData, authError });
+
+  if (authError) {
+    console.error("Authentication Error:", authError.message);
+    return { error: authError.message };
   }
 
-  // Inscription avec Supabase
-  const { error } = await supabase.auth.signUp({
-    email: data.email,
-    password: data.password,
-  });
+  // Step 3: Retrieve the user ID from the authentication response
+  const userId = signUpData?.user?.id;
 
-  if (error) {
-    console.error("Signup error:", error.message);
-    return error.message;
+  if (!userId) {
+    console.error("Error: Failed to retrieve user ID.");
+    return { error: "User creation succeeded, but user ID is missing." };
   }
 
-  // Ajout d'autres informations dans la base de données (optionnel)
-  const { error: profileError } = await supabase
-    .from('profiles') // Remplacez "profiles" par votre table utilisateur si différente
-    .insert({
-      name: data.name,
-      email: data.email,
-      address: data.address,
-    });
+  console.log("User ID Retrieved:", userId);
 
-  if (profileError) {
-    console.error("Profile creation error:", profileError.message);
-    return profileError.message;
+  // Step 4: Insert additional profile information into the profiles table
+  const { error: dbError } = await supabase
+    .from('profiles')
+    .insert([{ id_users: userId, fullname, phone, role,email}]);
+
+  console.log("Profiles Table Insertion Response:", { dbError });
+
+  if (dbError) {
+    console.error("Database Error:", dbError.message);
+    return { error: dbError.message };
   }
 
+  // Step 5: Complete the signup process
+  console.log("Signup process completed successfully. Redirecting to login...");
   revalidatePath('/', 'layout');
   redirect('/login');
+
+  return { success: true };
 }

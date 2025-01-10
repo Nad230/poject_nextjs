@@ -34,12 +34,15 @@ export async function middleware(request) {
 
   // Check for special pages: login, callback, signup, or error
   const isLoginPage = request.nextUrl.pathname.startsWith('/login');
+  const isForgotPage = request.nextUrl.pathname.startsWith('/forget-password');
+  const isResetPage = request.nextUrl.pathname.startsWith('/reset-password');
+
   const isCallbackPage = request.nextUrl.pathname.startsWith('/auth/callback');
   const isSignupPage = request.nextUrl.pathname === '/signup';
   const isErrorPage = request.nextUrl.pathname === '/error';
 
   // Allow the request to proceed if the user is logged in or if it's a special page
-  if (isLoggedIn || isLoginPage || isCallbackPage || isSignupPage || isErrorPage) {
+  if (isLoggedIn || isLoginPage || isCallbackPage || isSignupPage || isErrorPage || isForgotPage || isResetPage) {
     return NextResponse.next(); // Allow the request to proceed
   }
 

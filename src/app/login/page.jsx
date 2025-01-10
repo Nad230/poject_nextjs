@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createSupabaseBrowserClient } from "../utils/supabase/client";
 import { login } from "../action/actions";
 import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md"; // Corrected imports for visibility icons
 import Link from "next/link";
 import styles from "../styles/auth.module.css";
 
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false); // Password visibility state
   const supabase = createSupabaseBrowserClient();
 
   const handleFormLogin = async (e) => {
@@ -47,13 +49,10 @@ export default function LoginPage() {
         setError(`Error: ${error.message}`);
         return;
       }
-  
-      // OAuth login is initiated, wait for the callback to handle the session
     } catch (error) {
       setError(`Error: ${error.message}`);
     }
   };
-  
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -62,15 +61,10 @@ export default function LoginPage() {
       const accessToken = params.get("access_token");
       const refreshToken = params.get("refresh_token");
 
-      // Set the session using the received tokens
       supabase.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken,
       }).then(() => {
-        // After setting the session, automatically create the cookies
-        // This step should make the token cookies like b-zfuqbectykxdfclljtxd-auth-token.0, etc.
-
-        // Redirect to the homepage after successful login
         window.location.href = "/";
       }).catch((error) => {
         setError(`Error setting session: ${error.message}`);
@@ -99,14 +93,22 @@ export default function LoginPage() {
             <div className={styles.inputWrapper}>
               <AiOutlineLock className={styles.icon} />
               <input
-                type="password"
+                type={passwordVisible ? "text" : "password"} // Toggle password visibility
                 name="password"
                 placeholder="Password"
                 required
                 className={styles.input}
               />
+              <span 
+                onClick={() => setPasswordVisible(!passwordVisible)} 
+                className={styles.eyeIcon}>
+                {passwordVisible ? <MdVisibilityOff /> : <MdVisibility />} {/* Use MdVisibility for toggle */}
+              </span>
             </div>
           </div>
+          <p className={styles.forgotPassword}>
+          <Link href="/forget-password" className={styles.link}>forgot password?</Link>
+        </p>
           <div className={styles.buttonGroup}>
             <button type="submit" className={styles.button} disabled={loading}>
               {loading ? "Logging In..." : "Login"}
@@ -114,44 +116,46 @@ export default function LoginPage() {
           </div>
         </form>
 
-        <p className={styles.switch}>
-          Don't have an account?{" "}
-          <Link href="/signup" className={styles.link}>
-            Signup Here
-          </Link>
-        </p>
-        <p className={styles.switch}>Or</p>
+        
 
-          <div className={styles.socialButtons}>
-          {/* Google Login Button */}
-            <div className={styles.socialButton} onClick={() => handleOAuthLogin("google")}>
-              <img
-                className={styles.googleImage}
-                src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-                alt="Google Login"
-              />
-            </div>
-
-            {/* Facebook Login Button */}
-            <div className={styles.socialButton} onClick={() => handleOAuthLogin("facebook")}>
-              <img
-                className={styles.facebookImage}
-                src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-                alt="Facebook Login"
-              />
-            </div>
-
-            {/* GitHub Login Button */}
-            <div className={styles.socialButton} onClick={() => handleOAuthLogin("github")}>
-              <img
-                className={styles.githubImage}
-                src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-                alt="GitHub Login"
-              />
-            </div>
+        <div className={styles.switch}>
+          <p>Don't have an account? 
+            <Link href="/signup" className={styles.link}>Signup Here</Link>
+          </p>
         </div>
 
+        <div className={styles.divider}>
+          <span>Or</span>
+        </div>
 
+        <div className={styles.socialButtons}>
+          {/* Google Login Button */}
+          <div className={styles.socialButton} onClick={() => handleOAuthLogin("google")}>
+            <img
+              className={styles.googleImage}
+              src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+              alt="Google Login"
+            />
+          </div>
+
+          {/* Facebook Login Button */}
+          <div className={styles.socialButton} onClick={() => handleOAuthLogin("facebook")}>
+            <img
+              className={styles.facebookImage}
+              src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+              alt="Facebook Login"
+            />
+          </div>
+
+          {/* GitHub Login Button */}
+          <div className={styles.socialButton} onClick={() => handleOAuthLogin("github")}>
+            <img
+              className={styles.githubImage}
+              src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+              alt="GitHub Login"
+            />
+          </div>
+        </div>
       </div>
 
       {success && (
