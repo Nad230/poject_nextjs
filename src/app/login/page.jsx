@@ -32,8 +32,14 @@ export default function LoginPage() {
     } else {
       setTimeout(() => {
         window.location.href = "/";
-      }, 2000);
+      }, 100);
     }
+    sessionStorage.setItem('userEmail', formData.get('email'));
+    const email = sessionStorage.getItem('userEmail');
+console.log("Stored Email:", email);
+
+
+
   };
 
   const handleOAuthLogin = async (provider) => {

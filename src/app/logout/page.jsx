@@ -21,14 +21,19 @@ export default function LogoutPage() {
       }
 
       // Clear cookies manually (remove access and refresh tokens)
-      document.cookie = "access_token=; Max-Age=0; path=/;"; // Modify this with your token cookie names
-      document.cookie = "refresh_token=; Max-Age=0; path=/;"; // Modify this with your refresh token cookie names
+      document.cookie = "access_token=; Max-Age=0; path=/;";
+      document.cookie = "refresh_token=; Max-Age=0; path=/;";
       document.cookie = "sb-zfuqbectykxdfclljtxd-auth-token.0=; Max-Age=0; path=/;";
       document.cookie = "sb-zfuqbectykxdfclljtxd-auth-token.1=; Max-Age=0; path=/;";
-      document.cookie = "supabase.auth.token=; Max-Age=0; path=/;"; // Supabase token
-      document.cookie = "supabase.auth.refresh_token=; Max-Age=0; path=/;"; // Supabase refresh token
+      document.cookie = "supabase.auth.token=; Max-Age=0; path=/;";
+      document.cookie = "supabase.auth.refresh_token=; Max-Age=0; path=/;";
 
-      // After clearing the session and cookies, redirect to login page
+      // Clear localStorage and sessionStorage
+      localStorage.removeItem("supabase.auth.token");
+      localStorage.removeItem("supabase.auth.refresh_token");
+      sessionStorage.removeItem("userEmail");
+      
+      // After clearing the session, cookies, and storage, redirect to login page
       router.push("/login");
     };
 

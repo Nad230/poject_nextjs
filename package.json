@@ -17,6 +17,7 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.12",
     "cookies-next": "^5.0.2",
+    "js-cookie": "^3.0.5",
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -1,26 +1,43 @@
 'use server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { setCookie } from 'cookies-next';
+
 import { createClient } from '../utils/supabase/server'
+const supabase = createClient();
+
 
 export async function login(formData) {
-  const supabase = await createClient();
+  const supabase = await createClient(); // Initialize Supabase client
+
   const data = {
-    email: formData.get('email'),
-    password: formData.get('password'),
+    email: formData.get("email"),
+    password: formData.get("password"),
   };
 
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
     console.error("Login error:", error.message);
-    return error.message; 
+    return error.message; // Return the error message if login fails
+  }
+}
+
+export async function getUser() {
+  const supabase = await createClient(); // Initialize Supabase client
+
+  // Fetch the currently logged-in user's data
+  const { data: user, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.error("Error fetching user data:", error.message);
+    return null; // Return null or handle the error
   }
 
-
-  revalidatePath('/', 'layout');
-  redirect('/');
+  return user; // Return the user data
 }
+
+
 export async function signup(formData) {
   const supabase = await createClient();
 
@@ -72,3 +89,46 @@ export async function signup(formData) {
 
   return { success: true };
 }
+
+
+// utils/supabaseClient.js
+export const fetchProfiles = async () => {
+  try {
+    const { data, error } = await supabase.from('profiles').select('*');
+
+    if (error) {
+      console.error('Error fetching profiles:', error);
+      return;
+    }
+
+    console.log('Fetched profiles:', data);
+    return data; // Return the data for use elsewhere
+  } catch (err) {
+    console.error('Unexpected error:', err);
+  }
+};
+
+
+// Update profile data
+export const updateProfile = async (profileData) => {
+  try {
+    const user = supabase.auth.user();
+    if (!user) throw new Error("User not authenticated");
+
+    const { data, error } = await supabase
+      .from('profiles') // Replace with your table name
+      .update({
+        fullname: profileData.fullname,
+        phone: profileData.phone,
+        email: profileData.email,
+        photo: profileData.photo,
+      })
+      .eq('id', user.id); // Match the logged-in user's ID
+
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    throw err;
+  }
+};
